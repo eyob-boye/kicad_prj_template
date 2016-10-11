@@ -91,14 +91,15 @@ def kicadgerber_Emitter(target, source, env):
 def generate(env):
     """Add a Builder factory function and construction variables for
     kicad gerber builder to an Environment."""
-    pcbnew_com = find(env, 'pcbnew')
-    if pcbnew_com:
-        pcbnew_com_dir = os.path.dirname(pcbnew_com)
-    else:
-        print("Error: While loading Kicad Gerber scons tool, cannot find pcbnew executable.")
-        print("Please add executable path on the path variable.")
-        env.Exit(1)
-    env['KICAD_PYTHONCOM']  = os.path.join(pcbnew_com_dir, "python.exe")
+    if 'KICAD_PYTHONCOM' not in env.keys():
+        pcbnew_com = find(env, 'pcbnew')
+        if pcbnew_com:
+            pcbnew_com_dir = os.path.dirname(pcbnew_com)
+        else:
+            print("Error: While loading Kicad Gerber scons tool, cannot find pcbnew executable.")
+            print("Please add executable path on the path variable.")
+            env.Exit(1)
+        env['KICAD_PYTHONCOM']  = os.path.join(pcbnew_com_dir, "python.exe")
 
     Builder = SCons.Builder.Builder
 
