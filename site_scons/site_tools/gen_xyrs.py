@@ -57,7 +57,7 @@ def read_kicadpcb(kicadpcb_file):
     """ Open the board file, read the modules and extract the placement
     data.
     """
-    board = PN.LoadBoard(filename)
+    board = PN.LoadBoard(kicadpcb_file)
     board_bb = board.ComputeBoundingBox(True)
     bot_left_x = board_bb.GetLeft()
     bot_left_y = board_bb.GetBottom()
@@ -65,9 +65,10 @@ def read_kicadpcb(kicadpcb_file):
     for module in board.GetModules():
         rot = module.GetOrientation()/10.0
         module_rect = getFootprintRect(module, upright=True)
-        x_size = ToUnit(module_rect.GetWidth())
-        y_size = ToUnit(module_rect.GetHeight())
+        x_size = PN.ToMils(module_rect.GetWidth())
+        y_size = PN.ToMils(module_rect.GetHeight())
         designator = module.GetReference()
+        module_center = module_rect.Centre()
         result_mods[designator] = {"DESIGNATOR": designator,
                                    "VALUE": module.GetValue(),
                                    "X_SIZE": x_size,
@@ -75,42 +76,11 @@ def read_kicadpcb(kicadpcb_file):
                                    "ROTATION": rot,
                                    "SIDE": "top" if (module.GetLayer() is PN.F_Cu) else "bot",   #1/T/top for Top, 2/B/bot/bottom for Bottom
                                    "TYPE": "SMD",                                                #1/SMT/SMD for SMD, 2 for PTH
-                                   "X_LOC": ToUnit(module.GetPosition().x - bot_left_x),
-                                   "Y_LOC": ToUnit(bot_left_y - module.GetPosition().y),
+                                   "X_LOC": PN.ToMils(module_center.x - bot_left_x),
+                                   "Y_LOC": PN.ToMils(bot_left_y - module_center.y),
                                    "FOOTPRINT": "",                                              #C0805, R0603, TQFP-100
                                    "POPULATE": "1"                                               #1 for populate, 0 for do not populate
                                   }
-    return result_mods
-
-
-def read_kicadpcb(kicadpcb_file):
-    with open(kicadpcb_file, 'r') as ifile:
-        ifile_lines = ifile.readlines()
-    result_mods = {}
-    found_module = False
-    brace_level = 0
-    current_module = {"ref": None, "value":None}
-    for line in ifile_lines:
-        if ("(module " in line) and (not found_module):
-            found_module = True
-        if found_module:
-            if "(fp_text reference" in line:
-                line_parts = line.split()
-                current_module["ref"] = line_parts[2].strip(")").strip("(")
-            elif "(fp_text value" in line:
-                line_parts = line.split()
-                current_module["value"] = line_parts[2].strip(")").strip("(")
-            for c in line:
-                if c is "(":
-                    brace_level += 1
-                if c is ")":
-                    brace_level -= 1
-            if brace_level <= 0:
-                #print current_module
-                found_module = False
-                result_mods[current_module["ref"]] = {"value":current_module["value"]}
-                current_module = {"ref": None, "value":None}
-                brace_level = 0
     return result_mods
 
 
@@ -192,11 +162,11 @@ def gen_xyrs(mods, comps, parts):
 
     refs = sorted(mods.keys())
     for r in sorted(refs):
-        if mods[r]["value"] != comps[r]["value"]:
+        if mods[r]["VALUE"] != comps[r]["value"]:
             print("Error net value does not match pcb value for %s" % r)
             sys.exit(1)
-        fragment = ("%(DESIGNATOR)s\t%(X_LOC)7.2f\t%(Y_LOC)7.2f\t%(ROTATION)7.1f\t%(SIDE)s\t%(TYPE)s\t"
-                    "%(X_SIZE)7.2f\t%(Y_SIZE)7.2f\t %(VALUE)s\t%(FOOTPRINT)s\t%(POPULATE)s" % mods[r])
+        fragment = (("%(DESIGNATOR)s\t%(X_LOC)7.2f\t%(Y_LOC)7.2f\t%(ROTATION)7.1f\t%(SIDE)s\t%(TYPE)s\t"
+                    "%(X_SIZE)7.2f\t%(Y_SIZE)7.2f\t %(VALUE)s\t%(FOOTPRINT)s\t%(POPULATE)s") % mods[r])
         row = [fragment]
         part = comps[r]["part"]
         if comps[r]["mpn"]:

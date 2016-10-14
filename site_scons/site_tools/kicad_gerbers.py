@@ -91,7 +91,7 @@ def kicadgerber_Emitter(target, source, env):
 def generate(env):
     """Add a Builder factory function and construction variables for
     kicad gerber builder to an Environment."""
-    if 'KICAD_PYTHONCOM' not in env.keys():
+    if not env.has_key('KICAD_PYTHONCOM'):
         pcbnew_com = find(env, 'pcbnew')
         if pcbnew_com:
             pcbnew_com_dir = os.path.dirname(pcbnew_com)
