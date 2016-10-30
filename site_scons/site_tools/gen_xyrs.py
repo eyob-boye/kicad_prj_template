@@ -32,6 +32,17 @@ except:
     print("find it in kicad/bin folder.")
 
 
+def isModuleSMD(module):
+    """ Examine each pad of the module to determine
+    the module's type
+    """
+    for pad in module.Pads():
+        pad_attribute = pad.GetAttribute()
+        if pad_attribute is not PN.PAD_ATTRIB_SMD:
+            return False
+    return True
+
+
 def getFootprintRect(module, upright=True):
     """ module.GetFootprintRect() includes edge items
     in calculating bounding rectangle instead of the just the
@@ -75,7 +86,7 @@ def read_kicadpcb(kicadpcb_file):
                                    "Y_SIZE": y_size,
                                    "ROTATION": rot,
                                    "SIDE": "top" if (module.GetLayer() is PN.F_Cu) else "bot",   #1/T/top for Top, 2/B/bot/bottom for Bottom
-                                   "TYPE": "SMD",                                                #1/SMT/SMD for SMD, 2 for PTH
+                                   "TYPE": "SMD" if (isModuleSMD(module)) else "PTH",            #1/SMT/SMD for SMD, 2 for PTH
                                    "X_LOC": PN.ToMils(module_center.x - bot_left_x),
                                    "Y_LOC": PN.ToMils(bot_left_y - module_center.y),
                                    "FOOTPRINT": "",                                              #C0805, R0603, TQFP-100
