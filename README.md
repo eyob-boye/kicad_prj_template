@@ -26,5 +26,4 @@ Which is an alias for:
     $ cookiecutter https://github.com/eyob-boye/kicad_prj_template
 
 ## Credits
-See [AUTHORS](AUTHORS.md)
 Heavily used https://github.com/tuxredux/cookiecutter-git
