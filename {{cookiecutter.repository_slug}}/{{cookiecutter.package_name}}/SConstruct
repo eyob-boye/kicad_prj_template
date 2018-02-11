@@ -1,7 +1,7 @@
 #-----------------------------------------------------------------------------
 #  Configure for this project
 #-----------------------------------------------------------------------------
-PROJECT_NAME = "kicad_prj_template"
+PROJECT_NAME = "{{cookiecutter.package_name}}"
 
 IMPORTED_KICADLIBS = [
 ("#imported/kicadlib_macrofab", 'https://bitbucket.org/eyob/kicadlib_macrofab.git', "v0.2")

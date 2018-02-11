@@ -1,0 +1,7 @@
+The coockiecutter script is derived from...
+https://github.com/tuxredux/cookiecutter-git
+
+TODO:
+- Only works on Python-2. Make it work for both Python-2 & 3
+
+ 
