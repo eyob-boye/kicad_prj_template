@@ -4,7 +4,7 @@
 PROJECT_NAME = "{{cookiecutter.package_name}}"
 
 IMPORTED_KICADLIBS = [
-("#imported/kicadlib_macrofab", 'https://bitbucket.org/eyob/kicadlib_macrofab.git', "v0.2")
+("#imported/kicadlib_macrofab", 'https://bitbucket.org/eyob/kicadlib_macrofab.git', "v0.3")
 ]
 
 
