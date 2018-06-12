@@ -4,13 +4,17 @@
 COMPONENT_NAME = "{{cookiecutter.package_name}}"
 
 IMPORTED_KICADLIBS = [
-("#imported/kicadlib_macrofab", 'https://bitbucket.org/eyob/kicadlib_macrofab.git', "v0.3")
+("#imported/kicadlib_macrofab", 'https://bitbucket.org/eyob/kicadlib_macrofab.git', "v0.3"),
+("#imported/digikey-kicad-library", 'https://github.com/digikey/digikey-kicad-library.git', 'master')
 ]
 
+IMPORTED_KICADLIBS_EXCLUDES = [
+    "digikey-kicad-library/src"
+]
 
 #-----------------------------------------------------------------------------
 #  Call shared common script
 #-----------------------------------------------------------------------------
 SConscript(MakooCommonScript("kicad"),
-           exports=['COMPONENT_NAME', 'IMPORTED_KICADLIBS'])
+           exports=['COMPONENT_NAME', 'IMPORTED_KICADLIBS','IMPORTED_KICADLIBS_EXCLUDES'])
            
