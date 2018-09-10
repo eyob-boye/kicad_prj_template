@@ -5,11 +5,17 @@ COMPONENT_NAME = "{{cookiecutter.package_name}}"
 
 IMPORTED_KICADLIBS = [
 ("#imported/kicadlib_macrofab", 'https://bitbucket.org/eyob/kicadlib_macrofab.git', "v0.3"),
-("#imported/digikey-kicad-library", 'https://github.com/digikey/digikey-kicad-library.git', 'master')
+("#imported/digikey-kicad-library", 'https://github.com/digikey/digikey-kicad-library.git', 'master'),
+("#imported/kicad-symbols", 'https://github.com/KiCad/kicad-symbols.git', 'master'),
+("#imported/kicad-footprints", 'https://github.com/KiCad/kicad-footprints.git', 'master'),
+("#imported/kicad-packages3D", 'https://github.com/KiCad/kicad-packages3D.git', 'master')
 ]
 
 IMPORTED_KICADLIBS_EXCLUDES = [
-    "digikey-kicad-library/src"
+    "digikey-kicad-library/src",
+    "kicad-symbols\\obsolete",
+    "kicad-symbols\\legacy",
+    "obsolete"
 ]
 
 #-----------------------------------------------------------------------------
